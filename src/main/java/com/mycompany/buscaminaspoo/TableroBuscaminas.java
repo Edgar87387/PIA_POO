@@ -18,7 +18,12 @@ public class TableroBuscaminas
     int NumFila;
     int NumColumna;
     int NumMinas;
+    
+    boolean Generacion_Minas;
+    int NumCasillasAbiertas;
+    
     private Consumer<List<Casilla>> PartidaPerdida;
+    private Consumer<List<Casilla>> PartidaWin;
     private Consumer<Casilla> Casilla_Abierta;
     
     public TableroBuscaminas(int NumFila, int NumColumna, int NumMinas) 
@@ -26,11 +31,11 @@ public class TableroBuscaminas
         this.NumFila = NumFila;
         this.NumColumna = NumColumna;
         this.NumMinas = NumMinas;
-        IniciarCasillas();
-        
+        this.IniciarCasillas();
+        this.Generacion_Minas = false;        
     }
     
-    public void IniciarCasillas()
+    private void IniciarCasillas()
     {
         casilla = new Casilla[this.NumFila][this.NumColumna];
         for(int i = 0; i < casilla.length; i++)
@@ -40,22 +45,25 @@ public class TableroBuscaminas
                 casilla[i][j] = new Casilla(i, j);
             }
         }
-        GenerarMinas();
     }
     
-    private void GenerarMinas()
+    private void GenerarMinas(int PosFilaIgnorar, int PosColumnaIgnorar)
     {
         int MinasGeneradas = 0;
         while(MinasGeneradas != NumMinas)
         {
-            int PosTmpFila = (int)(Math.random()* casilla.length);
-            int PosTmpColumna = (int)(Math.random()* casilla[0].length);
-            if(!casilla[PosTmpFila][PosTmpColumna].isMina()){
-                casilla[PosTmpFila][PosTmpColumna].setMina(true);
-                MinasGeneradas++;
-            }
+            int PosTmpFila;
+            int PosTmpColumna;
+            do{
+                PosTmpFila = (int)(Math.random()* casilla.length);
+                PosTmpColumna = (int)(Math.random()* casilla[0].length);
+            }while((PosTmpFila == PosFilaIgnorar && PosTmpColumna == PosColumnaIgnorar) || casilla[PosTmpFila][PosTmpColumna].isMina());
+            casilla[PosTmpFila][PosTmpColumna].setMina(true);
+            MinasGeneradas++;
         }
         Actualizar_Num_Minas_Alrededor();
+        this.Generacion_Minas = true;
+        this.ImprimirTablero();
     }
     
    public void ImprimirTablero()
@@ -70,7 +78,7 @@ public class TableroBuscaminas
         }    
     }
     
-    void Imprimir_Pistas()
+    private void Imprimir_Pistas()
     {
         for(int i = 0; i < casilla.length; i++)
         {
@@ -89,15 +97,15 @@ public class TableroBuscaminas
             {
                 if(casilla[i][j].isMina())
                 {
-                    List<Casilla> Num_CasillasAlrededor = CasillasAlrededor( i, j);
-                    Num_CasillasAlrededor.forEach((c) -> c.IncrementarNumeroMinasCrecanas());
+                    List<Casilla> kasillasAlrededor = Obtener_CasillasAlrededor( i, j);
+                    kasillasAlrededor.forEach((c) -> c.IncrementarNumeroMinasCrecanas());
                 }
             }
      
         }  
     }
     
-    private List<Casilla> CasillasAlrededor(int PosFila, int PosColumna)
+    private List<Casilla> Obtener_CasillasAlrededor(int PosFila, int PosColumna)
     {
         List<Casilla> ListaCasillas = new LinkedList<>();
         for(int i = 0; i < 8; i++)
@@ -142,40 +150,76 @@ public class TableroBuscaminas
         return ListaCasillas;
     }
     
-    public void Seleccionar_Casilla(int PosFila,int PosColumna)
+    List<Casilla> ObtenerCasillasConMinas()
     {
-        Casilla_Abierta.accept(this.casilla[PosFila][PosColumna]);
-        if (this.casilla[PosFila][PosColumna].isMina()) {
-            List<Casilla> Casillas_Mina = new LinkedList<>();
-            for (int i = 0; i < casilla.length; i++) {
+        List<Casilla> Casillas_Mina = new LinkedList<>();
+            for (int i = 0; i < casilla.length; i++) 
+            {
                 for (int j = 0; j < casilla[i].length; j++) 
                 {
-                    if (casilla[i][j].isMina()) 
-                    {
+                    if (casilla[i][j].isMina()) {
                         Casillas_Mina.add(casilla[i][j]);
                     }
                 }
             }
-            PartidaPerdida.accept(Casillas_Mina);
-        }else if( this.casilla[PosFila][PosColumna].getNum_Mina_Alrededor()==0)
-        {
-            List<Casilla> Num_CasillaAlrededor = CasillasAlrededor(PosFila, PosColumna);
-            for(Casilla casilla: Num_CasillaAlrededor)
-            {
-                if(!casilla.isAbierta())
-                {
-                    casilla.setAbierta(true);
-                    Seleccionar_Casilla(casilla.getFila(), casilla.getColumna());
-                }
-            }
-        }
+        return Casillas_Mina;
     }
     
+    public void Seleccionar_Casilla(int PosFila, int PosColumna) 
+    {
+        if(!this.Generacion_Minas)
+        {
+            this.GenerarMinas(PosFila, PosColumna);
+        }
+        Casilla_Abierta.accept(this.casilla[PosFila][PosColumna]);
+        if (this.casilla[PosFila][PosColumna].isMina()) 
+        {
+            PartidaPerdida.accept(ObtenerCasillasConMinas());
+        } else if (this.casilla[PosFila][PosColumna].getNum_Mina_Alrededor() == 0) 
+            {
+                Marcar_Casilla_Abierta(PosFila, PosColumna);
+                List<Casilla> Casillas_Alrededor = Obtener_CasillasAlrededor(PosFila, PosColumna);
+                for (Casilla c : Casillas_Alrededor) 
+                {
+                    if (!c.isAbierta()) 
+                    {
+                        Seleccionar_Casilla(c.getFila(), c.getColumna());
+                    }
+                }
+            } 
+            else 
+            {
+                Marcar_Casilla_Abierta(PosFila, PosColumna);
+            }
+            if (PartidaGanada()) 
+            {
+                PartidaWin.accept(ObtenerCasillasConMinas());
+            }
+    }
+    
+    void Marcar_Casilla_Abierta(int PosFila, int PosColumna)
+    {
+        if( !this.casilla[PosFila][PosColumna].isAbierta())
+        {
+             NumCasillasAbiertas++;
+             this.casilla[PosFila][PosColumna].setAbierta(true);
+        }
+        
+    }
+
+    boolean PartidaGanada()
+    {
+        return NumCasillasAbiertas >= (NumFila * NumColumna) - NumMinas;
+    }
     
     
     public static void main(String[] args) 
     {
-       
+        TableroBuscaminas tablero = new TableroBuscaminas(5, 5, 5);
+        tablero.ImprimirTablero();
+        System.out.println("---");
+        tablero.Imprimir_Pistas();
+
     }
 
     public void setPartidaPerdida(Consumer<List<Casilla>> PartidaPerdida) 
@@ -185,6 +229,10 @@ public class TableroBuscaminas
 
     public void setCasilla_Abierta(Consumer<Casilla> Casilla_Abierta) {
         this.Casilla_Abierta = Casilla_Abierta;
+    }
+
+    public void setPartidaWin(Consumer<List<Casilla>> PartidaWin) {
+        this.PartidaWin = PartidaWin;
     }
     
 }

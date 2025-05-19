@@ -13,9 +13,6 @@ public class BuscaminasPOO
 
     public static void main(String[] args) 
     {
-        TableroBuscaminas Tablero = new TableroBuscaminas( 5, 5, 5);
-        Tablero.ImprimirTablero();
-        System.out.println("---");
-        Tablero.Imprimir_Pistas(); 
+        
     }
 }
