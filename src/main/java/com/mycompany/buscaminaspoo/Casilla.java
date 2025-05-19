@@ -14,6 +14,7 @@ public class Casilla
     private int Columna;
     private boolean Mina;
     private int Num_Mina_Alrededor;
+    private boolean Abierta;
 
     public Casilla(int Columna, int Fila) 
     {
@@ -55,9 +56,23 @@ public class Casilla
         return Num_Mina_Alrededor;
     }
     
+    public void setNum_Mina_Alrededor(int Num_Mina_Alrededor){
+        this.Num_Mina_Alrededor = Num_Mina_Alrededor;
+    }
+    
     public void IncrementarNumeroMinasCrecanas()
     {
         this.Num_Mina_Alrededor++;
     }
+    
+    public boolean isAbierta(){
+        return Abierta;
+    }
+    
+    public void setAbierta(boolean Abierta)
+    {
+        this.Abierta = Abierta;
+    }
+
     
 }

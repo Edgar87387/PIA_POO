@@ -32,18 +32,29 @@ public class Juego extends javax.swing.JFrame {
         CrearTablero();
     }
     
-    private void CrearTablero() {
-    tablerobuscaminas = new TableroBuscaminas(Num_Filas, Num_Columnas, Num_Minas);
-    tablerobuscaminas.setPartidaPerdida(new Consumer<List<Casilla>>() {
-        @Override
-        public void accept(List<Casilla> t) {
-            for( Casilla Casilla_Mina: t){
-                BotonesTablero[Casilla_Mina.getFila()][ Casilla_Mina.getColumna()].setText("*");
+    private void CrearTablero() 
+    {
+        tablerobuscaminas = new TableroBuscaminas(Num_Filas, Num_Columnas, Num_Minas);
+        tablerobuscaminas.setPartidaPerdida(new Consumer<List<Casilla>>() 
+        {
+            @Override
+            public void accept(List<Casilla> t) {
+                for( Casilla Casilla_Mina: t){
+                    BotonesTablero[Casilla_Mina.getFila()][ Casilla_Mina.getColumna()].setText("*");
+                }
             }
-        }
-    });
-    tablerobuscaminas.ImprimirTablero();
-}
+        });
+
+        tablerobuscaminas.setCasilla_Abierta(new Consumer<Casilla>(){
+            @Override
+            public void accept(Casilla t){
+                 BotonesTablero[t.getFila()][ t.getColumna()].setEnabled(false);
+                 BotonesTablero[t.getFila()][t.getColumna()].setText(t.getNum_Mina_Alrededor() == 0?"": t.getNum_Mina_Alrededor()+"");
+
+            }
+        });
+        tablerobuscaminas.ImprimirTablero();
+    }
 
     
     private void CargarControles(){
@@ -52,7 +63,7 @@ public class Juego extends javax.swing.JFrame {
     int Ancho = 30;
     int Alto = 30;
 
-    getContentPane().setLayout(null); // para permitir usar setBounds
+    getContentPane().setLayout(null);
     BotonesTablero = new JButton[Num_Filas][Num_Columnas];
 
     for (int i = 0; i < BotonesTablero.length; i++) {

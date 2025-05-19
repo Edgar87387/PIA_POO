@@ -19,6 +19,7 @@ public class TableroBuscaminas
     int NumColumna;
     int NumMinas;
     private Consumer<List<Casilla>> PartidaPerdida;
+    private Consumer<Casilla> Casilla_Abierta;
     
     public TableroBuscaminas(int NumFila, int NumColumna, int NumMinas) 
     {
@@ -141,19 +142,32 @@ public class TableroBuscaminas
         return ListaCasillas;
     }
     
-    public void Seleccionar_Casilla(int PosFila,int PosColumna){
+    public void Seleccionar_Casilla(int PosFila,int PosColumna)
+    {
+        Casilla_Abierta.accept(this.casilla[PosFila][PosColumna]);
         if (this.casilla[PosFila][PosColumna].isMina()) {
             List<Casilla> Casillas_Mina = new LinkedList<>();
             for (int i = 0; i < casilla.length; i++) {
-                for (int j = 0; j < casilla[i].length; j++) {
+                for (int j = 0; j < casilla[i].length; j++) 
+                {
                     if (casilla[i][j].isMina()) 
                     {
                         Casillas_Mina.add(casilla[i][j]);
                     }
                 }
-
             }
             PartidaPerdida.accept(Casillas_Mina);
+        }else if( this.casilla[PosFila][PosColumna].getNum_Mina_Alrededor()==0)
+        {
+            List<Casilla> Num_CasillaAlrededor = CasillasAlrededor(PosFila, PosColumna);
+            for(Casilla casilla: Num_CasillaAlrededor)
+            {
+                if(!casilla.isAbierta())
+                {
+                    casilla.setAbierta(true);
+                    Seleccionar_Casilla(casilla.getFila(), casilla.getColumna());
+                }
+            }
         }
     }
     
@@ -168,4 +182,9 @@ public class TableroBuscaminas
     {
         this.PartidaPerdida = PartidaPerdida;
     }
+
+    public void setCasilla_Abierta(Consumer<Casilla> Casilla_Abierta) {
+        this.Casilla_Abierta = Casilla_Abierta;
+    }
+    
 }
