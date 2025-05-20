@@ -78,7 +78,7 @@ public class TableroBuscaminas
         }    
     }
     
-    private void Imprimir_Pistas()
+    void Imprimir_Pistas()
     {
         for(int i = 0; i < casilla.length; i++)
         {
@@ -215,10 +215,7 @@ public class TableroBuscaminas
     
     public static void main(String[] args) 
     {
-        TableroBuscaminas tablero = new TableroBuscaminas(5, 5, 5);
-        tablero.ImprimirTablero();
-        System.out.println("---");
-        tablero.Imprimir_Pistas();
+        
 
     }
 
@@ -227,11 +224,13 @@ public class TableroBuscaminas
         this.PartidaPerdida = PartidaPerdida;
     }
 
-    public void setCasilla_Abierta(Consumer<Casilla> Casilla_Abierta) {
+    public void setCasilla_Abierta(Consumer<Casilla> Casilla_Abierta) 
+    {
         this.Casilla_Abierta = Casilla_Abierta;
     }
 
-    public void setPartidaWin(Consumer<List<Casilla>> PartidaWin) {
+    public void setPartidaWin(Consumer<List<Casilla>> PartidaWin) 
+    {
         this.PartidaWin = PartidaWin;
     }
     

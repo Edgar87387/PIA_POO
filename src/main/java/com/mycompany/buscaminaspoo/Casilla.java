@@ -7,6 +7,8 @@ package com.mycompany.buscaminaspoo;
 /**
  *
  * @author edgar
+ * Declaracion de la clase casilla esta clase sera la que se utilizara para todo el codigo debido a que las casillas cuentan 
+ * con varios atributos como se vera acontinuacion
  */
 public class Casilla 
 {
@@ -56,7 +58,8 @@ public class Casilla
         return Num_Mina_Alrededor;
     }
     
-    public void setNum_Mina_Alrededor(int Num_Mina_Alrededor){
+    public void setNum_Mina_Alrededor(int Num_Mina_Alrededor)
+    {
         this.Num_Mina_Alrededor = Num_Mina_Alrededor;
     }
     
@@ -65,7 +68,8 @@ public class Casilla
         this.Num_Mina_Alrededor++;
     }
     
-    public boolean isAbierta(){
+    public boolean isAbierta()
+    {
         return Abierta;
     }
     

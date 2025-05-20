@@ -68,8 +68,9 @@ public class Juego extends javax.swing.JFrame
             {
                 for( Casilla Casilla_Mina: t)
                 {
-                    BotonesTablero[Casilla_Mina.getFila()][ Casilla_Mina.getColumna()].setText("*");
+                   BotonesTablero[Casilla_Mina.getFila()][ Casilla_Mina.getColumna()].setText("*");
                 }
+                JOptionPane.showMessageDialog(null, "You Lose!!!", "Game Over", JOptionPane.WARNING_MESSAGE);
             }
         });
         
@@ -82,10 +83,12 @@ public class Juego extends javax.swing.JFrame
                 {
                     BotonesTablero[Casilla_Mina.getFila()][ Casilla_Mina.getColumna()].setText("UwU");
                 }
+                JOptionPane.showMessageDialog(null, "¡Felicidades! Has ganado la partida.");
             }
         });
 
-        tablerobuscaminas.setCasilla_Abierta(new Consumer<Casilla>(){
+        tablerobuscaminas.setCasilla_Abierta(new Consumer<Casilla>()
+        {
             @Override
             public void accept(Casilla t){
                  BotonesTablero[t.getFila()][ t.getColumna()].setEnabled(false);
@@ -96,7 +99,8 @@ public class Juego extends javax.swing.JFrame
     }
 
     
-    private void CargarControles(){
+    private void CargarControles()
+    {
         int PosXreferencia = 25;
         int PosYreferencia = 25;
         int Ancho = 30;
@@ -224,16 +228,39 @@ public class Juego extends javax.swing.JFrame
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        int num = Integer.parseInt(JOptionPane.showInputDialog("Digite el tamanio de la matriz: "));
-        this.Num_Filas = num;
-        this.Num_Columnas =  num;
-        JuegoNuevo();
+        try 
+        {
+            int num = Integer.parseInt(JOptionPane.showInputDialog("Digite el tamanio de la matriz: "));
+            if(num < 2 || num > 30) {
+                JOptionPane.showMessageDialog(this, "Tamanio invalido. Debe estar entre 2 y 30.");
+                return;
+            }
+            this.Num_Filas = num;
+            this.Num_Columnas = num;
+            if(Num_Minas >= Num_Filas * Num_Columnas) {
+                JOptionPane.showMessageDialog(this, "!!!!!!!!!!!!!Reduzca el numero de minas!!!!!!!!!!!!!!!");
+                return;
+            }
+            JuegoNuevo();
+        } catch (NumberFormatException e) 
+        {
+            JOptionPane.showMessageDialog(this, "Entrada invalida. Solo se permiten numeros enteros.");
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        int num = Integer.parseInt(JOptionPane.showInputDialog("Digite el numero de minas: "));
-        this.Num_Minas = num;
-        JuegoNuevo();
+        try 
+        {
+            int num = Integer.parseInt(JOptionPane.showInputDialog("Digite el numero de minas: "));
+            if(num < 1 || num >= Num_Filas * Num_Columnas) {
+                JOptionPane.showMessageDialog(this, "Numero de minas invalido. Debe ser mayor que 0 y menor que el total de casillas (" + (Num_Filas * Num_Columnas) + ").");
+                return;
+            }
+            this.Num_Minas = num;
+            JuegoNuevo();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Solo se permiten numeros enteros.");
+        }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed

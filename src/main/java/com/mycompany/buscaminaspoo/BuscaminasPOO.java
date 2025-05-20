@@ -13,6 +13,9 @@ public class BuscaminasPOO
 
     public static void main(String[] args) 
     {
-        
+        javax.swing.SwingUtilities.invokeLater(() -> {
+        Juego ObjVista = new Juego();
+        ObjVista.setVisible(true);  
+        });
     }
 }
