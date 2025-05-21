@@ -18,11 +18,12 @@ public class Casilla
     private int Num_Mina_Alrededor;
     private boolean Abierta;
 
-    public Casilla(int Columna, int Fila) 
+    public Casilla(int Fila, int Columna)
     {
-        this.Columna = Columna;
         this.Fila = Fila;
+        this.Columna = Columna;
     }
+
 
     public int getFila() 
     {

@@ -66,11 +66,26 @@ public class Juego extends javax.swing.JFrame
             @Override
             public void accept(List<Casilla> t) 
             {
-                for( Casilla Casilla_Mina: t)
+                for (Casilla Casilla_Mina : t) 
                 {
-                   BotonesTablero[Casilla_Mina.getFila()][ Casilla_Mina.getColumna()].setText("*");
+                    BotonesTablero[Casilla_Mina.getFila()][Casilla_Mina.getColumna()].setText("*");
                 }
-                JOptionPane.showMessageDialog(null, "You Lose!!!", "Game Over", JOptionPane.WARNING_MESSAGE);
+
+                int respuesta = JOptionPane.showConfirmDialog(
+                    null, 
+                    "!!!You Lose!!!\n¿Quieres jugar de nuevo?", 
+                    "Game Over", 
+                    JOptionPane.OK_CANCEL_OPTION, 
+                    JOptionPane.WARNING_MESSAGE
+                );
+
+                if (respuesta == JOptionPane.OK_OPTION) 
+                {
+                    JuegoNuevo(); 
+                } else 
+                {
+                    System.exit(0); 
+                }
             }
         });
         
