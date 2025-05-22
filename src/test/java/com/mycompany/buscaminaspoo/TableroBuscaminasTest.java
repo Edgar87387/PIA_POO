@@ -22,9 +22,12 @@ public class TableroBuscaminasTest {
     @AfterAll
     public static void tearDownClass() {
     }
-
+    /**
+     * Este metodo inicializa un tablero anets de cada prueba
+     */
     @BeforeEach
-    public void setUp() {
+    public void setUp() 
+    {
         tablero = new TableroBuscaminas(5, 5, 5);
         tablero.setCasilla_Abierta(c -> {});
         tablero.setPartidaPerdida(c -> {});
@@ -34,26 +37,31 @@ public class TableroBuscaminasTest {
     @AfterEach
     public void tearDown() {
     }
-
+    /**
+     * Este test prueba el metodo Imprimir tablero para que se ejecute correctamente
+     */
     @Test
-    public void testImprimirTablero() {
+    public void testImprimirTablero() 
+    {
         TableroBuscaminas instance = new TableroBuscaminas(5, 5, 3);
         instance.setCasilla_Abierta(c -> {});
         instance.setPartidaPerdida(c -> {});
         instance.setPartidaWin(c -> {});
-        instance.Seleccionar_Casilla(2, 2);
-        instance.ImprimirTablero();
-        assertTrue(true);
+        instance.Seleccionar_Casilla(2, 2);//Se selecciona una casilla central
+        instance.ImprimirTablero();//Se imprime el tablero
+        assertTrue(true);//Verificamos que no haya errores
     }
-
+    /**
+     * Este test prieba el metodo Improimir_Pistas
+     */
     @Test
     public void testImprimir_Pistas() {
         TableroBuscaminas instance = new TableroBuscaminas(5, 5, 3);
         instance.setCasilla_Abierta(c -> {});
         instance.setPartidaPerdida(c -> {});
         instance.setPartidaWin(c -> {});
-        instance.Seleccionar_Casilla(2, 2);
-        instance.Imprimir_Pistas();
+        instance.Seleccionar_Casilla(2, 2);//Se lecciona una casiila para activar las pistas
+        instance.Imprimir_Pistas();//Muestra las pistas
         assertTrue(true);
     }
 
@@ -63,9 +71,9 @@ public class TableroBuscaminasTest {
         instance.setCasilla_Abierta(c -> {});
         instance.setPartidaPerdida(c -> {});
         instance.setPartidaWin(c -> {});
-        instance.Seleccionar_Casilla(2, 2);
+        instance.Seleccionar_Casilla(2, 2);//Generamos el tablero
         List<Casilla> result = instance.ObtenerCasillasConMinas();
-        assertEquals(4, result.size());
+        assertEquals(4, result.size());//El tenemos que tener 4 minas 
     }
 
     @Test
@@ -74,8 +82,8 @@ public class TableroBuscaminasTest {
         instance.setCasilla_Abierta(c -> {});
         instance.setPartidaPerdida(c -> {});
         instance.setPartidaWin(c -> {});
-        instance.Seleccionar_Casilla(1, 1);
-        assertTrue(instance.casilla[1][1].isAbierta());
+        instance.Seleccionar_Casilla(1, 1);//Se abre una casilla
+        assertTrue(instance.casilla[1][1].isAbierta());//Verificamos que este abierta
     }
 
     @Test
@@ -84,26 +92,27 @@ public class TableroBuscaminasTest {
         instance.setCasilla_Abierta(c -> {});
         instance.setPartidaPerdida(c -> {});
         instance.setPartidaWin(c -> {});
-        instance.Marcar_Casilla_Abierta(1, 1);
-        assertTrue(instance.casilla[1][1].isAbierta());
+        instance.Marcar_Casilla_Abierta(1, 1);//Marcamos una casilla como abierta
+        assertTrue(instance.casilla[1][1].isAbierta());//Verificamos su apertura
     }
 
     @Test
     public void testPartidaGanada() {
-        TableroBuscaminas instance = new TableroBuscaminas(2, 2, 1);
+        TableroBuscaminas instance = new TableroBuscaminas(2, 2, 1);//Se crea un tablero de 2x2 con 1 mina
         instance.setCasilla_Abierta(c -> {});
         instance.setPartidaPerdida(c -> {});
         instance.setPartidaWin(c -> {});
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                instance.Seleccionar_Casilla(i, j);
+                instance.Seleccionar_Casilla(i, j);//Abrimos todas las casillas
             }
         }
-        assertTrue(instance.PartidaGanada());
+        assertTrue(instance.PartidaGanada());//Vreificamos el que ganamos
     }
 
     @Test
-    public void testMain() {
+    public void testMain() 
+    {
         String[] args = null;
         TableroBuscaminas.main(args);
         assertTrue(true);
@@ -113,9 +122,9 @@ public class TableroBuscaminasTest {
     public void testSetPartidaPerdida() {
         TableroBuscaminas instance = new TableroBuscaminas(2, 2, 1);
         instance.setCasilla_Abierta(c -> {});
-        instance.setPartidaPerdida(minas -> assertNotNull(minas));
+        instance.setPartidaPerdida(minas -> assertNotNull(minas));//vEMOS SI PERDIMOS LA PARTIDA
         instance.setPartidaWin(c -> {});
-        instance.Seleccionar_Casilla(1, 1);
+        instance.Seleccionar_Casilla(1, 1);// Esta casilla podria ser la casilla perdida eso dependera si tiene mina o no
         assertTrue(true);
     }
 
@@ -125,8 +134,8 @@ public class TableroBuscaminasTest {
         instance.setCasilla_Abierta(c -> assertNotNull(c));
         instance.setPartidaPerdida(c -> {});
         instance.setPartidaWin(c -> {});
-        instance.Seleccionar_Casilla(1, 1);
-        assertTrue(instance.casilla[1][1].isAbierta());
+        instance.Seleccionar_Casilla(1, 1);//Abrimos  la casilla
+        assertTrue(instance.casilla[1][1].isAbierta());//Confirmamos su apertura
     }
 
     @Test

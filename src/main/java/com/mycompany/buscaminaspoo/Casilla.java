@@ -12,19 +12,25 @@ package com.mycompany.buscaminaspoo;
  */
 public class Casilla 
 {
+    //Posicion de la casilla en el arreglo
     private int Fila;
     private int Columna;
-    private boolean Mina;
-    private int Num_Mina_Alrededor;
-    private boolean Abierta;
+    private boolean Mina;//Si la casilla contiene una mina o no
+    private int Num_Mina_Alrededor; //Numero de minas alrededor de las casillas
+    private boolean Abierta;//Si la casilla fue abierta o no
 
+    /**
+     * Contructor del la posicion de la casilla
+     * @param Fila posicion de la fila
+     * @param Columna posicion de la columna
+     */
     public Casilla(int Fila, int Columna)
     {
         this.Fila = Fila;
         this.Columna = Columna;
     }
 
-
+    //Metodos getter y setter
     public int getFila() 
     {
         return Fila;
@@ -55,7 +61,8 @@ public class Casilla
         this.Mina = Mina;
     }
 
-    public int getNum_Mina_Alrededor() {
+    public int getNum_Mina_Alrededor() 
+    {
         return Num_Mina_Alrededor;
     }
     
@@ -64,6 +71,9 @@ public class Casilla
         this.Num_Mina_Alrededor = Num_Mina_Alrededor;
     }
     
+    /**
+     * Metodo para incrementar el contador de minas alrededor
+     */
     public void IncrementarNumeroMinasCrecanas()
     {
         this.Num_Mina_Alrededor++;

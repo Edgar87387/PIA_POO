@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+//import javax.swing.ImageIcon;
 
 /**
  *
@@ -17,22 +18,26 @@ import javax.swing.JOptionPane;
  */
 public class Juego extends javax.swing.JFrame 
 {
-    int Num_Filas = 10;
+    //Atributos principales de la clase
+    int Num_Filas = 10; //Se especifica un nuero de filas y columnas por defecto
     int Num_Columnas = 10;
-    int Num_Minas = 10;
+    int Num_Minas = 10;//Se da por defecto 10 minas 
     
     JButton [][] BotonesTablero;
     TableroBuscaminas tablerobuscaminas;
 
     /**
-     * Creates new form Juego
+     * Constructor del juego donde se inicia el juego y se configuran los menus
      */
     public Juego() 
     {
         initComponents();
         JuegoNuevo();
     }
-    
+    /**
+     * este metodo se encarga de crear botones nuevos sin embargo antes de esto si existen ya 
+     * se eliminaran los botones existentes
+     */
     void Descargar_Controles()
     {
         if( BotonesTablero != null )
@@ -49,7 +54,10 @@ public class Juego extends javax.swing.JFrame
             }
         }
     }
-    
+    /**
+     * Este metodo se encargara de reiniciar el juego volviendo descargar los
+     * controles, cargando los controles, creando el tablero y evitamos que se repitan los componentes
+     */
     private void JuegoNuevo()
     {
         Descargar_Controles();
@@ -58,6 +66,10 @@ public class Juego extends javax.swing.JFrame
         repaint();
     }
     
+    /**
+     * Este metodo crea el tablero y define las acciones que ocurriran
+     * si pierdes, aganas o solamente abres la casilla
+     */
     private void CrearTablero() 
     {
         tablerobuscaminas = new TableroBuscaminas(Num_Filas, Num_Columnas, Num_Minas);
@@ -68,7 +80,10 @@ public class Juego extends javax.swing.JFrame
             {
                 for (Casilla Casilla_Mina : t) 
                 {
-                    BotonesTablero[Casilla_Mina.getFila()][Casilla_Mina.getColumna()].setText("*");
+                     BotonesTablero[Casilla_Mina.getFila()][Casilla_Mina.getColumna()].setText("*");
+                     //Llevo ya mucho tiempo aqui no voy a poner iamgenes de momento :(
+                    //ImageIcon iconoMina = new ImageIcon("Source Packages/imagenes/bomba.png");
+                    //BotonesTablero[Casilla_Mina.getFila()][Casilla_Mina.getColumna()].setIcon(iconoMina);
                 }
 
                 int respuesta = JOptionPane.showConfirmDialog(
@@ -89,23 +104,39 @@ public class Juego extends javax.swing.JFrame
             }
         });
         
-         tablerobuscaminas.setPartidaWin(new Consumer<List<Casilla>>() 
+        tablerobuscaminas.setPartidaWin(new Consumer<List<Casilla>>() 
         {
             @Override
             public void accept(List<Casilla> t) 
             {
-                for( Casilla Casilla_Mina: t)
+                for (Casilla Casilla_Mina : t) 
                 {
-                    BotonesTablero[Casilla_Mina.getFila()][ Casilla_Mina.getColumna()].setText("UwU");
+                     BotonesTablero[Casilla_Mina.getFila()][Casilla_Mina.getColumna()].setText("UwU");
                 }
-                JOptionPane.showMessageDialog(null, "¡Felicidades! Has ganado la partida.");
+
+                int respuesta = JOptionPane.showConfirmDialog(
+                    null, 
+                    "!!!You Win!!!\n¿Quieres jugar de nuevo?", 
+                    "Felicidades", 
+                    JOptionPane.OK_CANCEL_OPTION, 
+                    JOptionPane.WARNING_MESSAGE
+                );
+
+                if (respuesta == JOptionPane.OK_OPTION) 
+                {
+                    JuegoNuevo(); 
+                } else 
+                {
+                    System.exit(0); 
+                }
             }
         });
 
         tablerobuscaminas.setCasilla_Abierta(new Consumer<Casilla>()
         {
             @Override
-            public void accept(Casilla t){
+            public void accept(Casilla t)
+            {
                  BotonesTablero[t.getFila()][ t.getColumna()].setEnabled(false);
                  BotonesTablero[t.getFila()][t.getColumna()].setText(t.getNum_Mina_Alrededor() == 0?"": t.getNum_Mina_Alrededor()+"");
 
@@ -113,7 +144,9 @@ public class Juego extends javax.swing.JFrame
         });
     }
 
-    
+    /**
+     * Aqui se creara la interfaz grafica conlas dimenciones especificadas
+     */
     private void CargarControles()
     {
         int PosXreferencia = 25;
@@ -140,6 +173,7 @@ public class Juego extends javax.swing.JFrame
                 {
                     BotonesTablero[i][j].setBounds(BotonesTablero[i-1][j].getX(), BotonesTablero[i-1][j].getY()+BotonesTablero[i-1][j].getHeight(),Ancho, Alto);
                 }
+                //Evento para cuando se de click en una casilla
                 BotonesTablero[i][j].addActionListener(new ActionListener() 
                 {
                     @Override
@@ -151,12 +185,15 @@ public class Juego extends javax.swing.JFrame
                 getContentPane().add(BotonesTablero[i][j]);
             }
         }
-
+        //Ajusta el tamaño de la ventana al tablero
         this.setSize(BotonesTablero[Num_Filas-1][Num_Columnas-1].getX()+ BotonesTablero[Num_Filas-1][Num_Columnas-1].getWidth()+30, BotonesTablero[Num_Filas-1][Num_Columnas-1].getY() + BotonesTablero[Num_Filas-1][Num_Columnas-1].getHeight()+70);
 
     }
 
-    
+    /**
+     * Si se le da click a una casilla
+     * @param e Evento de tipo ActionEvent
+     */
     private void btnClick(ActionEvent e) 
     {
         JButton btn = (JButton)e.getSource();
@@ -182,7 +219,6 @@ public class Juego extends javax.swing.JFrame
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -218,9 +254,6 @@ public class Juego extends javax.swing.JFrame
         jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -319,7 +352,6 @@ public class Juego extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
